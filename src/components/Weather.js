@@ -53,7 +53,7 @@ const Weather = (props) => {
                     <ul>
                         <li>Humidity: {props.forecast.main.humidity}</li>
                         <li>Pressure: {props.forecast.main.pressure}</li>
-                        <li>Feels Like: {props.forecast.main.feels_like}</li>
+                        <li>Feels Like: {props.units === 'C' ? Math.round(props.forecast.main.feels_like - 273.15) : Math.floor((props.forecast.main.feels_like - 273.15) * 9 / 5 + 32)}{props.units}</li>
                         <li>Cloud Cover: {props.forecast.clouds.all}%</li>
                         <li>Wind: {props.forecast.wind.speed}m/s {props.forecast.wind.deg}°</li>
                         <li>Visibility: {props.forecast.visibility}</li>

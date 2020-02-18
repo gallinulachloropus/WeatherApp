@@ -1,3 +1,7 @@
+## WeatherApp
+A weather app made in React.
+[screenshot](https://i.imgur.com/geEtMdR.png)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

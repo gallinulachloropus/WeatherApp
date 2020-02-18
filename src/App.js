@@ -84,7 +84,7 @@ function App() {
   }, [localTime, cover])
 
   return (
-    <main style={localTime > 16 || localTime <= 5 ? { color: 'whitesmoke' } : { color: '#333' }}>
+    <main style={localTime > 17 || localTime <= 5 ? { color: 'whitesmoke' } : { color: '#333' }}>
       <Location
         setQuery={setQuery}
         setUnits={setUnits}

@@ -57,7 +57,7 @@ function App() {
   }, [forecast, cover])
 
   useEffect(() => {
-    if (localTime) {
+    if (localTime || localTime === 0) {
       const cloudCover = (cover) => {
         return 100 - cover
       }
@@ -75,7 +75,7 @@ function App() {
           return 40
         }
         //Night
-        if (hours > 20 || hours <= 5) {
+        if (hours > 20 || hours <= 5 || hours === 0) {
           return 10
         }
       }

@@ -51,7 +51,14 @@ function App() {
 
   useEffect(() => {
     if (forecast.timezone || forecast.timezone === 0) {
-      setLocalTime((new Date().getUTCHours() + ((forecast.timezone / 60) / 60)) % 24)
+      let offset = (forecast.timezone / 60) / 60
+      function calcTime(offset) {
+        const d = new Date();
+        const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        const nd = new Date(utc + (3600000*offset));
+        return nd;
+    }
+      setLocalTime(calcTime(offset).getHours())
       setCover(forecast.clouds.all)
     }
   }, [forecast, cover])
@@ -67,15 +74,15 @@ function App() {
           return 50
         }
         //Day
-        if (hours > 10 && hours <= 17) {
+        if (hours > 10 && hours <= 16) {
           return 80
         }
         //Evening
-        if (hours > 17 && hours <= 20) {
+        if (hours > 16 && hours <= 18) {
           return 40
         }
         //Night
-        if (hours > 20 || hours <= 5 || hours === 0) {
+        if (hours > 18 || hours <= 5 || hours === 0) {
           return 10
         }
       }
@@ -84,7 +91,7 @@ function App() {
   }, [localTime, cover])
 
   return (
-    <main style={localTime > 17 || localTime <= 5 ? { color: 'whitesmoke' } : { color: '#333' }}>
+    <main style={localTime > 16 || localTime <= 5 ? { color: 'whitesmoke' } : { color: '#333' }}>
       <Location
         setQuery={setQuery}
         setUnits={setUnits}

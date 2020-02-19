@@ -35,7 +35,7 @@ const Weather = (props) => {
         if (status) {
             if (status.type === 'Clouds') { setEmoji('🌥️') }
             if (status.type === 'Clear' && ((props.localTime > 5) && (props.localTime <= 17))) { setEmoji('☀️') }
-            if (status.type === 'Clear' && ((props.localTime > 17) || (props.localTime <= 5))) { setEmoji('🌙') }
+            if (status.type === 'Clear' && ((props.localTime > 16) || (props.localTime <= 5))) { setEmoji('🌙') }
             if (status.type === 'Rain') { setEmoji('🌧️') }
             if (status.type === 'Snow') { setEmoji('🌨️') }
         }

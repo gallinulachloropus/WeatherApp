@@ -1,7 +1,7 @@
 ## WeatherApp
-A weather app made in React.
+A weather app made in React. <br />
 [screenshot](https://i.imgur.com/geEtMdR.png)<br />
-[live](http://its-the-weather.surge.sh/)
+[live](http://its-the-weather.surge.sh/)<br />
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

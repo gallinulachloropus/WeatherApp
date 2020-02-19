@@ -5,6 +5,7 @@ const Location = (props) => {
     const [value, setValue] = useState('')
     const [hidden, toggleHide] = useState(true)
 
+    //event handlers for forms to select city/units
     const handleChange = (event) => {
         const { value } = event.target
         setValue(value)

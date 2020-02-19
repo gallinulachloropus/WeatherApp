@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import DetailedReport from './DetailedReport'
 
 const Weather = (props) => {
 
@@ -7,6 +8,7 @@ const Weather = (props) => {
     const [emoji, setEmoji] = useState('')
     const [report, toggleReport] = useState(false)
 
+    //Sets temperature to state depending on unit selected
     useEffect(() => {
         if (props.forecast.main) {
             setStatus({ type: props.forecast.weather[0].main, description: props.forecast.weather[0].description })
@@ -31,15 +33,41 @@ const Weather = (props) => {
         }
     }, [props.forecast, props.units])
 
+    //select and emoji based on weather and set to state
     useEffect(() => {
         if (status) {
-            if (status.type === 'Clouds') { setEmoji('🌥️') }
-            if (status.type === 'Clear' && ((props.localTime > 5) && (props.localTime <= 17))) { setEmoji('☀️') }
-            if (status.type === 'Clear' && ((props.localTime > 16) || (props.localTime <= 5))) { setEmoji('🌙') }
-            if (status.type === 'Rain') { setEmoji('🌧️') }
-            if (status.type === 'Snow') { setEmoji('🌨️') }
+            switch (status.type) {
+                case 'Clouds':
+                    setEmoji('🌥️')
+                    break
+                case 'Clear':
+                    if ((props.localTime > 5) && (props.localTime <= 17)) { setEmoji('☀️') }
+                    if ((props.localTime > 16) || (props.localTime <= 5)) { setEmoji('🌙') }
+                    break
+                case 'Rain':
+                    setEmoji('🌧️')
+                    break
+                case 'Thunderstorm':
+                    setEmoji('⛈️')
+                    break
+                case 'Drizzle':
+                    setEmoji('🌦️')
+                    break
+                case 'Snow':
+                    setEmoji('🌨️')
+                    break
+                case 'Mist':
+                case 'Fog':
+                case 'Haze':
+                    setEmoji('🌫️')
+                    break
+                default:
+                    setEmoji('❗')
+            }
         }
     }, [status, props.localTime])
+
+
 
     return (
         <div className="weather">
@@ -49,18 +77,7 @@ const Weather = (props) => {
             <h3><span role="img" aria-label={status.type} title={status.type}>{status.description}</span></h3>
             <span className="report-button" onClick={() => toggleReport(!report)}>Detailed Report</span>
             <div className="report" style={report ? { display: 'block' } : { display: 'none' }}>
-                {props.forecast.main ?
-                    <ul>
-                        <li>Humidity: {props.forecast.main.humidity}</li>
-                        <li>Pressure: {props.forecast.main.pressure}</li>
-                        <li>Feels Like: {props.units === 'C' ? Math.round(props.forecast.main.feels_like - 273.15) : Math.floor((props.forecast.main.feels_like - 273.15) * 9 / 5 + 32)}{props.units}</li>
-                        <li>Cloud Cover: {props.forecast.clouds.all}%</li>
-                        <li>Wind: {props.forecast.wind.speed}m/s {props.forecast.wind.deg}°</li>
-                        <li>Visibility: {props.forecast.visibility}</li>
-                        <li>Sunrise: {new Date(props.forecast.sys.sunrise * 1000).toLocaleString()}</li>
-                        <li>Sunset: {new Date(props.forecast.sys.sunset * 1000).toLocaleString()}</li>
-                    </ul> : ''
-                }
+                <DetailedReport forecast={props.forecast} />
             </div>
         </div>
     )

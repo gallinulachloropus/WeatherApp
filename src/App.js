@@ -16,10 +16,13 @@ function App() {
   const [units, setUnits] = useState('C')
   const [localTime, setLocalTime] = useState()
   const [cover, setCover] = useState()
+  const [errorMsg, toggleErrorMsg] = useState(false)
 
   useEffect(() => {
+    //api call
     fetch(`http://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${openWeatherKey}`)
       .then(res => {
+        //check for errors
         if (!res.ok) {
           throw new Error(res.status)
         }
@@ -27,10 +30,22 @@ function App() {
       })
       .then(res => res.json())
       .then(data => setForecast(data))
-      .catch(err => alert('Could not connect to weather: ' + err))
+      //handle errors, if it is a 404 display a div instead of an alert
+      .catch(err => {
+        if (err.message === '404') {
+          toggleErrorMsg(true)
+          setTimeout(() => {
+            toggleErrorMsg(false)
+            setQuery('Tampa')
+          }, 2500)
+        } else {
+          setQuery('Tampa')
+          alert('Error retrieving weather: ' + err)
+        }
+      })
   }, [query, openWeatherKey])
 
-
+  //sets query and units to whatever is in localStorage
   useEffect(() => {
     if (localStorage.getItem('location')) {
       setQuery(JSON.parse(localStorage.getItem('location') || ''))
@@ -40,6 +55,7 @@ function App() {
     }
   }, [])
 
+  //on every update, the query and units are saved to local storage
   useEffect(() => {
     if (query) {
       localStorage.setItem('location', JSON.stringify(query))
@@ -49,20 +65,22 @@ function App() {
     }
   })
 
+  //calculate local time and cloud cover for background
   useEffect(() => {
     if (forecast.timezone || forecast.timezone === 0) {
       let offset = (forecast.timezone / 60) / 60
       function calcTime(offset) {
         const d = new Date();
         const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-        const nd = new Date(utc + (3600000*offset));
+        const nd = new Date(utc + (3600000 * offset));
         return nd;
-    }
+      }
       setLocalTime(calcTime(offset).getHours())
       setCover(forecast.clouds.all)
     }
   }, [forecast, cover])
 
+  //determine values for background based on time
   useEffect(() => {
     if (localTime || localTime === 0) {
       const cloudCover = (cover) => {
@@ -91,7 +109,8 @@ function App() {
   }, [localTime, cover])
 
   return (
-    <main style={localTime > 16 || localTime <= 5 ? { color: 'whitesmoke' } : { color: '#333' }}>
+    <main style={(localTime > 16) || (localTime <= 10) ? { color: 'whitesmoke' } : { color: '#333' }}>
+      {errorMsg ? <div className="error-404">Could not find location: {query}</div> : ''}
       <Location
         setQuery={setQuery}
         setUnits={setUnits}
